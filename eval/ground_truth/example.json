@@ -1,0 +1,11 @@
+{
+  "doc": "example.pdf",
+  "elements": [
+    {"type": "heading",   "page": 1, "text": "2 Related Work"},
+    {"type": "text",      "page": 1, "text": "Prior approaches rely on rule based extraction of tables."},
+    {"type": "table",     "page": 2, "cells": [["Model", "F1"], ["Baseline", "71.2"], ["Ours", "78.9"]]},
+    {"type": "formula",   "page": 2, "latex": "E = mc^2"},
+    {"type": "key_value", "page": 1, "key": "Submitted", "value": "12 March 2024"},
+    {"type": "image",     "page": 3, "caption_keywords": ["architecture", "overview"]}
+  ]
+}

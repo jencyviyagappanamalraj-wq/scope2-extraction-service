@@ -1,0 +1,7 @@
+tool,doc,type,page,element,score
+smoke,example,heading,1,2 Related Work,0.0
+smoke,example,text,1,Prior approaches rely on rule based extraction of tables.,0.0
+smoke,example,table,2,"[['Model', 'F1'], ['Baseline', '71.2'], ",0.0
+smoke,example,formula,2,E = mc^2,0.0
+smoke,example,key_value,1,Submitted,0.0
+smoke,example,image,3,,0.0

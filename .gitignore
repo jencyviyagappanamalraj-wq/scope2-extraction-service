@@ -1,0 +1,22 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+
+# Big or generated files - never commit these
+*.pdf
+data/
+output/
+models/
+.aws-sam/
+samconfig.toml
+.cache/
+*.zip
+
+# Evaluation inputs you keep locally (commit only small examples)
+eval/outputs/*
+!eval/outputs/.gitkeep

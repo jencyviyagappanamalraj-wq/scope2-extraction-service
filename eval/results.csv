@@ -1,0 +1,7 @@
+tool,element_type,n,score
+smoke,heading,1,0.0
+smoke,text,1,0.0
+smoke,table,1,0.0
+smoke,formula,1,0.0
+smoke,key_value,1,0.0
+smoke,image,1,0.0
