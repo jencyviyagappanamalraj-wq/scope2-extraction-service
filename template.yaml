@@ -4,7 +4,7 @@ Description: Scope 2 hello-world stack (Lambda + Function URL + DynamoDB + S3)
 
 Globals:
   Function:
-    Runtime: python3.12
+    Runtime: python3.13
     Timeout: 30
     MemorySize: 256
 
