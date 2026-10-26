@@ -6,23 +6,31 @@
 
 ```mermaid
 flowchart TD
-  A[Customer or Streamlit app] -->|x-api-key| B[API Lambda via Function URL]
-  B --> C[(DynamoDB: jobs, key hashes, usage)]
-  B --> D[(S3: inputs and outputs)]
-  B --> E[SQS queue + dead-letter queue]
-  E --> F[Worker Lambda: one page batch per message]
-  F --> G{Router: pick a method per element}
-  G -->|text, headings, tables| H[pdfplumber + pypdf]
-  G -->|web pages| I[requests + BeautifulSoup]
-  G -->|formulas, broken tables, key-values, images| J[Gemini free API]
-  H --> K[Confidence score per element]
+  A["Streamlit app / customer<br/>HTTPS + x-api-key header"] --> B["API Lambda<br/>FastAPI via Mangum, Function URL"]
+  B -->|"check key hash, create job"| C[("DynamoDB<br/>jobs, key hashes, usage")]
+  B -->|"presigned upload URL"| D[("S3 bucket<br/>inputs + outputs, private, SSE-S3")]
+  B --> E["SQS queue<br/>+ dead-letter queue"]
+  E -->|"triggers"| F["Worker Lambda (zip)<br/>one page batch per message"]
+  F --> G{"Router<br/>pick a method per element"}
+  G -->|"text, headings, tables"| H["pdfplumber + pypdf"]
+  G -->|"web pages"| I["requests + BeautifulSoup"]
+  G -->|"Accurate level, low confidence only"| J["Gemini API<br/>free tier, key in SSM"]
+  H --> K["Confidence score per element"]
   I --> K
   J --> K
-  K --> D
-  F --> C
+  K --> L["Write partial result to S3<br/>last batch merges Markdown + JSON + cost report"]
+  L --> D
+  L -->|"update job status + usage"| C
+
+  classDef compute fill:#EEEDFE,stroke:#534AB7,color:#3C3489
+  classDef store fill:#E1F5EE,stroke:#0F6E56,color:#085041
+  classDef ext fill:#F1EFE8,stroke:#5F5E5A,color:#444441
+  class B,F,G,H,I,K,L compute
+  class C,D,E store
+  class A,J ext
 ```
 
-GitHub shows this diagram automatically. Also redraw it in draw.io or Excalidraw if you want a nicer picture.
+**Cross-cutting:** SAM template (`sam deploy` / `sam delete`), least-privilege IAM, CloudWatch logs + 2-3 alarms, SSM Parameter Store for secrets.
 
 ## Why each choice (and why it is free)
 
@@ -58,7 +66,7 @@ Parser agreement + structural checks (table columns consistent, heading levels v
 - **Standard:** parsers only, no AI calls.
 - **Accurate:** parsers + Gemini on low-confidence elements + an AI quality check.
 
-## Known limitations (be honest here)
+## Known limitations
 
 - The cloud worker does not run Docling (it needs a Docker image). Docling appears as a Scope 1 baseline in the benchmark.
 - Gemini free tier is rate-limited and non-commercial, so a real product needs the paid tier. The business case is priced at paid list prices.
